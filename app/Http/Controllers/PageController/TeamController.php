@@ -19,14 +19,14 @@ use Carbon\Carbon;
 
 class TeamController extends Controller
 {
-  
+
     public function ajax_info(Request $request)
     {
         $fWeecode = $request->weecode;
         $userCareer = '';
 
         $usersL = User::where('sponsor_id', '=', $fWeecode)->first();
-        
+
 
         $userbinary = User::where('binary_id', '=', $usersL->id)->get();
 
@@ -96,7 +96,7 @@ class TeamController extends Controller
                   <td colspan="2"><span class="icon-user"></span> '.'Paket Tutarı'.'</td>
                   <td>' . number_format(Payment::where('user_id', $usersL->id)->where('is_pay','1')->sum('usd_amount'),2) . ' $</td>
                 </tr>
-               
+
                 <tr>
                   <td colspan="3" ><div class="treeButton" onclick="boxClose()" style="color: #000"><span class="icon-minus"></span> '.'Kapat'.'</div></td>
                 </tr>
@@ -108,7 +108,7 @@ class TeamController extends Controller
 
     public static function createPeople($position, $width, $username, $link)
     {
-        
+
         return '
             <span class="binary-hr-line binar-hr-line-' . $position . ' binary-hr-line-width-' . $width . '"></span>
                 <div class="node-item-2-child-left ">
@@ -139,7 +139,7 @@ class TeamController extends Controller
         }
 
     }
-    
+
     public static function Weecode($teamList, $userID)
     {
 
@@ -185,7 +185,7 @@ class TeamController extends Controller
                 } elseif (Count($allTree[$userDetail->binary_id]) < 2) {
                     $allTree[$userDetail->binary_id][$position] = $userDetail->id;
                 }
-                
+
             }
 
             $tumEkip = self::Weecode($allTree, $newList[$weeCode]);
@@ -256,7 +256,7 @@ class TeamController extends Controller
 
 
             $allTree = array();
-            
+
             foreach ($users as $userDetail) {
                 if ($userDetail->direction == "L") {
                     $position = "left";
@@ -266,7 +266,7 @@ class TeamController extends Controller
                     continue;
                 }
 
-                
+
                 if (!isset($allTree[$userDetail->binary_id])) {
                     $allTree[$userDetail->binary_id][$position] = $userDetail->id;
                 } elseif (Count($allTree[$userDetail->binary_id]) < 2) {
@@ -308,6 +308,7 @@ class TeamController extends Controller
         $allCareerList = 0;
 
 
+
        // $addTreeWeeCode = $searchWeeCodeInput;
         return view('binarytree')
             ->with('error', $error)
@@ -319,7 +320,8 @@ class TeamController extends Controller
             ->with('searchWeeCodeInput', $searchWeeCodeInput)
             ->with('searchWeeCode', $searchWeeCode)
             ->with('addTreeWeeCode', $addTreeWeeCode)
-            ->with('allCareerList', $allCareerList);
+            ->with('allCareerList', $allCareerList)
+            ->with('users', $users);
     }
 
 
@@ -435,7 +437,7 @@ class TeamController extends Controller
             self::checkOutLine($up_user, $position);
         }
         return 1;
-    } 
+    }
     public function SettlementNewRegister($newUserCode,$parentID, $position)
     {
         // return 'Parent Id: '.$parentID." NewUser:".$newUserCode." pos:".$position;
@@ -448,7 +450,7 @@ class TeamController extends Controller
                 if ($check == 0) {
                     return redirect()->back()->with('error', 'İç hattınıza ekleme yapamazsınız!');
                 }
-                
+
             }
         }
         if($newUserCode == $parentID){
@@ -564,27 +566,29 @@ class TeamController extends Controller
         $ss = " ";
         $finished = 0;
         $filter = 0;
-        
-        echo '<div class="node-item-' . $item . '">
+
+        echo '<div data-id-node-user="'.$userID.'" class="first-item-node node-depth-'.$depth.' node-item-' . $item . '">
                     <div class="binary-node-single-item user-block user-0">
                         <div class="images_wrapper"><a href="javascript:;"><img style="filter: hue-rotate('.$filter.'deg);"
-                                        class="profile-rounded-image-small tooltipwork weecodetreee"
+                                        class="node-depth-'.$depth.'-img profile-rounded-image-small tooltipwork weecodetreee"
                                         src="' . asset('/assets//img/faces/user.png') . '"
                                          alt="' . $usersData[$userID]->sponsor_id . '"
                                         title="' . $usersData[$userID]->sponsor_id . '" data-content="' . $usersData[$userID]->sponsor_id . '"></a></div>
                         <span class="wrap_content wrapinfo" ' . $ss . '>
-                        <a href="' . $buttonPeople . '">' . $usersData[$userID]->user_name . '</a><a href="' . $buttonPeople . '" class="packagehover" ' . $ss . '></a></span>
+                        <a '.($depth != 3 ? 'data-id-node-user="'.$userID.'" ' : '').' '.($depth != 3 ? 'data-id-node-user-my="'.$userID.'" ' : '').' class="node-depth-'.$depth.'-name node-name-link" href="' . $buttonPeople . '">' . $usersData[$userID]->user_name . '</a><a href="' . $buttonPeople . '" class="packagehover" ' . $ss . '></a></span>
 
-                        
+
 
                     </div>
                 </div>
 
                 ';
 
+
         if (isset($allTree[$userID]) AND !empty($allTree[$userID])) {
             if (self::depthFind($usersData, $firstUserID, $userID) < 4) {
-                echo '<div class="parent-wrapper clearfix">';
+
+                echo '<div data-depth="'.$depth.'" '.($depth != 3 ? 'data-id-node-parent-user="'.$userID.'" ' : '').' '.($depth != 3 ? 'data-id-node-user="'.$userID.'" ' : '').' class="parent-wrapper clearfix">';
             }
             foreach ($allTree[$userID] as $position => $TreeDetail) {
                 $positionSelect = $position;
@@ -651,7 +655,7 @@ class TeamController extends Controller
     }
     public function get_index_team()
     {
-       
+
         $package = "black";
         $userPaymentAmount = Payment::where('user_id',Auth::user()->id)->where('is_pay',1)->sum('usd_amount');
 
@@ -663,7 +667,7 @@ class TeamController extends Controller
                 "email" => Auth::user()->email,
             );
         if (!isset($new)) {
-            $new = null; 
+            $new = null;
         }
         return view("myteam")->with("users", $new);
     }
@@ -674,7 +678,7 @@ class TeamController extends Controller
 
         foreach ($child as $write) {
             $childPaymentAmount = Payment::where('user_id',$write->id)->where('is_pay',1)->sum('usd_amount');
-    
+
             $new[$write->upline_id][] = array(
 
                 "fullname" => $write->name,

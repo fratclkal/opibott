@@ -1,0 +1,136 @@
+// Config
+$class-prefix: "";
+$padding: 12px;
+
+// Colors
+$background_color: rgb(124, 199, 187);
+$text_color: #333;
+
+$active_background_color: #333;
+$active_text_color: #FFF;
+
+$hover_background_color: #333;
+$hover_text_color: #FFF;
+
+ul.#{$class-prefix}accordion-menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background-color: $background_color;
+
+    li {
+        position: relative;
+
+        & > a {
+            display: block;
+            color: $text_color;
+            padding: $padding 40px;
+            text-decoration: none;
+
+            border-bottom: 3px solid #FFF;
+
+            &::after {
+                font-family: "Font Awesome 5 Free";
+                content: "\f044";
+                position: absolute;
+                left: 10px;
+                top: $padding;
+                width: 0;
+                height: 0;
+            }
+
+            &:hover {
+                background-color: $hover_background_color;
+                color: $hover_text_color;
+                transition: 0.2s all;
+            }
+        }
+
+        &.#{$class-prefix}accordion-dropdown {
+            & > a {
+                &::before {
+                    font-family: "Font Awesome 5 Free";
+                    content: "\f063";
+                    position: absolute;
+                    right: 28px;
+                    top: $padding;
+                    width: 0;
+                    height: 0;
+                }
+
+                &:hover {
+                    &::before {
+                        border-left: 10px solid $background_color;
+                    }
+                }
+            }
+        }
+
+        & > ul.#{$class-prefix}accordion-menu {
+            // display: none;
+
+            transition: all 2s;
+            max-height: 0;
+            overflow: hidden;
+
+            & > li {
+                padding-left: 20px;
+                & > a {
+                    border-left: 3px solid $hover_background_color;
+                    font-size: 10px;
+                    padding-left: 15px;
+                }
+            }
+        }
+        & > ul.#{$class-prefix}accordion-menu-active {
+            // display: block;
+            max-height: none;
+        }
+    }
+
+    li.#{$class-prefix}accordion-active {
+        & > a {
+            background-color: $active_background_color;
+            color: $active_text_color;
+
+            &:hover {
+                background-color: $hover_background_color;
+                color: $hover_text_color;
+                transition: 0.2s all;
+            }
+        }
+
+        &.#{$class-prefix}accordion-dropdown {
+            & > a {
+                &::before {
+                    content: "\f061";
+                }
+            }
+        }
+    }
+}
+
+
+// Not part of the code
+#sidebar {
+    margin: auto;
+    max-width: 500px;
+    padding:20px;
+    background-color: #FFF;
+
+    .title {
+        width: 100%;
+        text-align: center;
+        font-size: 30px;
+        margin-bottom: 20px;
+    }
+}
+
+@import url('https://fonts.googleapis.com/css?family=Anton|Baloo+Bhai');
+body {
+    font-family: 'Arial', cursive;
+    background-color: #333;
+    font-weight: 700;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif
+}
