@@ -27,13 +27,15 @@ class UserBotController extends Controller
     }
     public function settings(Request $request){
         $request->validate([
-            'api_key' => 'required'
+            'api_key' => 'required',
+            'market' => 'required|in:Binance'
         ]);
         $setting = UserBotSetting::where('user_id',Auth::user()->id)->first();
         if ($setting) {
             $setting->api_key = $request->api_key;
             $setting->api_secret = $request->api_secret;
             $setting->ip_address = $request->ip_address;
+            $setting->market = $request->market;
             if ($setting->save()) {
                 return redirect()->route('user_bot_settings')->with('success','24 saat ile 72 saat arasında kurulumunuz tamamlanacaktır.');
             }
@@ -45,6 +47,7 @@ class UserBotController extends Controller
                 'api_secret' => $request->api_secret,
                 'ip_address' => $request->ip_address,
                 'active' => Auth::user()->payment,
+                'market' => $request->market,
             ]);
             if ($ekle) {
                 return redirect()->route('user_bot_settings')->with('success','24 saat ile 72 saat arasında kurulumunuz tamamlanacaktır.');

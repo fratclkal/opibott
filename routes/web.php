@@ -119,6 +119,7 @@ Route::middleware([isLogin::class])->group(function () {
     Route::controller(AdminUserController::class)->group(function () {
         Route::get('/users_list', 'user_list')->name('user_list');
         Route::get('/users_bot_list', 'user_bot_list')->name('user_bot_list');
+        Route::post('/users_bot_delete', 'user_bot_delete')->name('user_bot_delete');
 
     });
     Route::controller(AdminTransfersController::class)->group(function () {

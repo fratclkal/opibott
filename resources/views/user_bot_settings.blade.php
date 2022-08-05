@@ -8,7 +8,7 @@
 </style>
 <div class="container-fluid">
 
-                
+
 <!-- breadcrumb -->
 <div class="breadcrumb-header justify-content-between">
     <div class="my-auto">
@@ -16,7 +16,7 @@
             <h4 class="content-title mb-0 my-auto">Bot Ayarları</h4><span class="text-muted mt-1 tx-13 ms-2 mb-0">/ Bot Bilgilerim</span>
         </div>
     </div>
-    
+
 </div>
 <!-- breadcrumb -->
     <!-- row -->
@@ -35,28 +35,28 @@
                                     <p class="main-profile-name-text">Bot Bilgilerim</p>
                                 </div>
                             </div>
-                             
+
                             <div class="row">
                                 <div class="col-md-4 col mb20">
-                                    
+
                                     <h6 class="text-small text-muted mb-0">Başlangıç Tarihi</h6>
-                                    
-                                   
+
+
                                     <h5>{{  \Carbon\Carbon::parse($payment->payment_date)->format("d.m.Y") }}</h5>
                                 </div>
                                 <div class="col-md-4 col mb20">
-                                    
+
                                     <h6 class="text-small text-muted mb-0">Bitiş Tarihi</h6>
                                     <h5>
                                         @if($payment->type == 'monthly')
-                                            {{  \Carbon\Carbon::parse($payment->payment_date)->addMonth()->format("d.m.Y") }} 
+                                            {{  \Carbon\Carbon::parse($payment->payment_date)->addMonth()->format("d.m.Y") }}
                                         @elseif($payment->type == 'yearly')
                                             {{  \Carbon\Carbon::parse($payment->payment_date)->addMonths(12)->format("d.m.Y") }}
                                         @endif
                                     </h5>
                                 </div>
                                 <div class="col-md-4 col mb20">
-                                
+
                                     <h6 class="text-small text-muted mb-0">Durum</h6>
                                     <h5 class="{{ Auth::user()->payment == 1 ? 'text-success':'text-danger' }}">{{ Auth::user()->payment == 1 ? 'Botunuz Aktif':'Botunuz Pasif' }}</h5>
                                 </div>
@@ -86,8 +86,8 @@
                                 </div>
                             </div>
                         </div>
-                    
-                    
+
+
                         <div class="form-group ">
                             <div class="row">
                                 <div class="col-md-3">
@@ -108,18 +108,30 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group ">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="form-label">Borsa</label>
+                                </div>
+                                <div class="col-md-9">
+                                    <select class="form-control" name="market" id="market">
+                                        <option value="Binance">Binance</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                         <div class="card-footer">
                             <div class="btn ripple btn-warning-gradient" id='confirm_alert'> Kaydet </div>
                             <button type="submit" style="display: none;" class="btn btn-primary waves-effect waves-light">
                             Kaydet
                         </button>
                         </div>
-                        
-                    
+
+
                     </form>
                 </div>
 
-            
+
             </div>
         </div>
         <!-- /Col -->
@@ -147,6 +159,6 @@
           $("#settings_form").submit();
         });
     });
-    
+
 </script>
 @endsection
