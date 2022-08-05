@@ -424,7 +424,7 @@ td {
   color: #fff;
   display: block;
   font-size: 12px;
-  height: 22px;
+  height: auto;
   line-height: 23px;
   margin: 0 0 0 -10px;
   min-width: 100px;

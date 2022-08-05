@@ -575,7 +575,7 @@ class TeamController extends Controller
                                          alt="' . $usersData[$userID]->sponsor_id . '"
                                         title="' . $usersData[$userID]->sponsor_id . '" data-content="' . $usersData[$userID]->sponsor_id . '"></a></div>
                         <span class="wrap_content wrapinfo" ' . $ss . '>
-                        <a '.($depth != 3 ? 'data-id-node-user="'.$userID.'" ' : '').' '.($depth != 3 ? 'data-id-node-user-my="'.$userID.'" ' : '').' class="node-depth-'.$depth.'-name node-name-link" href="' . $buttonPeople . '">' . $usersData[$userID]->user_name . '</a><a href="' . $buttonPeople . '" class="packagehover" ' . $ss . '></a></span>
+                        <a '.($depth != 3 ? 'data-id-node-user="'.$userID.'" ' : '').' '.($depth != 3 ? 'data-id-node-user-my="'.$userID.'" ' : '').' class="node-depth-'.$depth.'-name node-name-link" href="' . $buttonPeople . '" style="word-break: break-all">' . $usersData[$userID]->user_name . '</a><a href="' . $buttonPeople . '" class="packagehover" ' . $ss . '></a></span>
 
 
 
