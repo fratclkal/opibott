@@ -2,7 +2,6 @@
 @section('css')
     <link rel="stylesheet" href="{{ asset('/assets/css/jquery-ui.css') }}">
     <link rel="stylesheet" href="{{ asset('/assets/css/tree.css') }}">
-    <link rel="stylesheet" href="{{asset('accordion/assets/css/style.css')}}">
     <style>
         .no-js #loader { display: none;  }
         .js #loader { display: block; position: absolute; left: 100px; top: 0; }
@@ -51,18 +50,9 @@
                     </div>
                 </div>
             </div>
-            <div id="data-div">
 
-            </div>
-            <div class="col-12 accordion">
-                <h5 class="me-first"></h5>
-
-                <ul class="accordion-menu" id="accordion_menu_1">
-
-                </ul>
-            </div>
         </div>
-        <br><br><br><br><br><br><br>
+
         <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
         <div class="se-pre-con"></div>
     </div>
@@ -85,108 +75,6 @@
         if(error){
             swal('', error, 'warning');
         }
-    </script>
-    <script type="text/javascript" src="{{asset('accordion/assets/js/main.js')}}"></script>
-
-
-    <script>
-        var str = '';
-
-            let first_item_name = $('.node-depth-0-name').html();
-            $('.me-first').html(first_item_name);
-
-            var id_arr = [];
-            var child_data = {};
-
-            $.each($('.parent-wrapper .clearfix'), function (index, value){
-                if ($(value).attr('data-id-node-user')){
-                    id_arr.push($(value).attr('data-id-node-user'));
-                }
-            });
-
-            console.log(id_arr);
-
-            var arr = [];
-
-            $.each(id_arr, (index,value) => {
-
-                arr[$('*[data-id-node-user-my="'+value+'"]').html()] = [];
-
-                try {
-                    arr[$('*[data-id-node-user-my="'+value+'"]').html()].push($('*[data-id-node-parent-user="'+value+'"] > .node-right-item .node-name-link')[0].innerHTML);
-                }catch (e){
-                    arr[$('*[data-id-node-user-my="'+value+'"]').html()].push('Boş');
-                }
-                try {
-                    arr[$('*[data-id-node-user-my="'+value+'"]').html()].push($('*[data-id-node-parent-user="'+value+'"] > .node-left-item .node-name-link')[0].innerHTML);
-                }catch (e){
-                    arr[$('*[data-id-node-user-my="'+value+'"]').html()].push('Boş');
-                }
-
-                console.log('dsa');
-
-
-            });
-            var ids = [];
-            $.each($('.node-name-link'), (index, value) => {
-                ids[$(value).html()] = $(value).attr('data-id-node-user-my-sponsor-id');
-            });
-
-
-
-
-            makeTree(arr, first_item_name);
-
-            console.log(str);
-            $('#accordion_menu_1').html(str);
-
-            init_accordion_tree(document.getElementById('accordion_menu_1'));
-
-
-
-        function makeTree(arr_, item_name){
-            $.each(arr_[item_name], (index,value) => {
-                str += '<li>\n' +
-                    '                        <a href="#/"><i onclick="openBinary('+ids[value]+')">Üye Binary Ağacı - </i><p>'+value+'</p> <i data-sponsor-id="'+ids[value]+'" class="tooltipwork-responsive"> Detaylar</i></a>\n';
-
-                if (arr_[value]){
-                    str += '<ul class="accordion-menu" >'
-                    makeTree(arr_, value);
-                    str += '</ul>\n';
-                }
-
-                str += '</li>\n';
-            });
-        }
-        if ($(window).width() < 767)
-        {
-            $('.region-content').hide();
-            $('#data-div').show();
-            $('.accordion').show();
-        }else{
-            $('.region-content').show();
-            $('#data-div').hide();
-            $('.accordion').hide();
-        }
-
-        $( window ).resize(function() {
-            if ($(window).width() < 767)
-            {
-                $('.region-content').hide();
-                $('#data-div').show();
-                $('.accordion').show();
-            }else{
-                $('.region-content').show();
-                $('#data-div').hide();
-                $('.accordion').hide();
-            }
-        });
-
-        function openBinary(sponsor_id){
-            let url = '{{route('SettlementTreeIndex')}}/' + sponsor_id;
-            window.location.href = url;
-        }
-
     </script>
 
 @endsection
