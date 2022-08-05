@@ -147,7 +147,7 @@
         function makeTree(arr_, item_name){
             $.each(arr_[item_name], (index,value) => {
                 str += '<li>\n' +
-                    '                        <a href="#/"><i onclick="openBinary('+ids[value]+')">Binary Tree Link - </i><p>'+value+'</p> <i data-sponsor-id="'+ids[value]+'" class="tooltipwork-responsive"> Data Link</i></a>\n';
+                    '                        <a href="#/"><i onclick="openBinary('+ids[value]+')">Üye Binary Ağacı - </i><p>'+value+'</p> <i data-sponsor-id="'+ids[value]+'" class="tooltipwork-responsive"> Detaylar</i></a>\n';
 
                 if (arr_[value]){
                     str += '<ul class="accordion-menu" >'
