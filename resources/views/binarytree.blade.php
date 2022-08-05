@@ -51,7 +51,9 @@
                     </div>
                 </div>
             </div>
+            <div id="data-div">
 
+            </div>
             <div class="col-12 accordion">
                 <h5 class="me-first"></h5>
 
@@ -125,6 +127,13 @@
 
 
             });
+            var ids = [];
+            $.each($('.node-name-link'), (index, value) => {
+                ids[$(value).html()] = $(value).attr('data-id-node-user-my-sponsor-id');
+            });
+
+
+
 
             makeTree(arr, first_item_name);
 
@@ -138,7 +147,7 @@
         function makeTree(arr_, item_name){
             $.each(arr_[item_name], (index,value) => {
                 str += '<li>\n' +
-                    '                        <a href="#/">'+value+'</a>\n';
+                    '                        <a href="#/"><i onclick="openBinary('+ids[value]+')">Binary Tree Link - </i><p>'+value+'</p> <i data-sponsor-id="'+ids[value]+'" class="tooltipwork-responsive"> Data Link</i></a>\n';
 
                 if (arr_[value]){
                     str += '<ul class="accordion-menu" >'
@@ -152,9 +161,11 @@
         if ($(window).width() < 767)
         {
             $('.region-content').hide();
+            $('#data-div').show();
             $('.accordion').show();
         }else{
             $('.region-content').show();
+            $('#data-div').hide();
             $('.accordion').hide();
         }
 
@@ -162,12 +173,19 @@
             if ($(window).width() < 767)
             {
                 $('.region-content').hide();
+                $('#data-div').show();
                 $('.accordion').show();
             }else{
                 $('.region-content').show();
+                $('#data-div').hide();
                 $('.accordion').hide();
             }
         });
+
+        function openBinary(sponsor_id){
+            let url = '{{route('SettlementTreeIndex')}}/' + sponsor_id;
+            window.location.href = url;
+        }
 
     </script>
 

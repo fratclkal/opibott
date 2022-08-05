@@ -69,6 +69,7 @@ Route::middleware([isLogin::class])->group(function () {
         Route::post('/treedata', 'ajax_info')->name('TreeData');
         Route::get('/binary-tree/{id?}/{parent?}','get_index')->name('SettlementTreeIndex');
         Route::get('/awaitingBinaryMember', 'getplacmentusers')->name('AwaitingSettlement');
+        Route::get('sponsor_id', 'getSponsorId')->name('GetSponsorId');
         Route::get('/addNewMember/{sponsor_id?}/{leftright?}', 'addNewMemberIndex')->name('addNewMemberIndex');
         Route::post('/user-binary-tree/', 'getUserSettlementTree')->name('getUserSettlementTree');
         //Aktif-pasif kayitlar
