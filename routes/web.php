@@ -90,7 +90,7 @@ Route::middleware([isLogin::class])->group(function () {
         Route::get('/mywallets','myWallets')->name('myWallets');
         Route::post('/mywallets','myWalletsPost')->name('myWalletsPost');
         Route::get('/wallet','walletIndex')->name('WalletIndex');
-        Route::get('/withdraw/confirmation/{withdraw_id}/{token}','withdrawConfirmation');
+        Route::get('/withdraw/confirmation/{withdraw_id}/{token}','withdrawConfirmation')->name('withdraw_mail_confirmation');
         Route::get('/withdraw/delete/{id}','withdrawDelete')->name('withdrawDelete');
         Route::post('/wallet/withdraw','withdraw')->name('withdrawWallet');
     });
