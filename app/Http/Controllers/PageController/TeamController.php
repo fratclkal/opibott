@@ -112,7 +112,7 @@ class TeamController extends Controller
         return '
             <span class="binary-hr-line binar-hr-line-' . $position . ' binary-hr-line-width-' . $width . '"></span>
                 <div class="node-item-2-child-left ">
-                    <div class="binary-node-single-item user-block user-5">
+                    <div class="binary-node-single-item user-block user-5 addCircle">
                         <div class="images_wrapper"><a href="' . $link . '"><img  style="border-radius: 50%;" class="profile-rounded-image-small" src="/assets/add_tr.png"  alt="Add new member" title="Add new member"></a></div>
                         <span class="wrap_content"><a class="hide-button" href="' . $link . '">' . $username . '</a></span>
                     </div>
@@ -568,7 +568,7 @@ class TeamController extends Controller
         $filter = 0;
 
         echo '<div data-id-node-user="'.$userID.'" class="first-item-node node-depth-'.$depth.' node-item-' . $item . '">
-                    <div class="binary-node-single-item user-block user-0">
+                    <div class="binary-node-single-item user-block user-0 circle'.$userID.'">
                         <div class="images_wrapper"><a href="javascript:;"><img style="filter: hue-rotate('.$filter.'deg);"
                                         class="node-depth-'.$depth.'-img profile-rounded-image-small tooltipwork weecodetreee"
                                         src="' . asset('/assets//img/faces/user.png') . '"
@@ -588,7 +588,7 @@ class TeamController extends Controller
         if (isset($allTree[$userID]) AND !empty($allTree[$userID])) {
             if (self::depthFind($usersData, $firstUserID, $userID) < 4) {
 
-                echo '<div data-depth="'.$depth.'" '.($depth != 3 ? 'data-id-node-parent-user="'.$userID.'" ' : '').' '.($depth != 3 ? 'data-id-node-user="'.$userID.'" ' : '').' class="parent-wrapper clearfix">';
+                echo '<div data-depth="'.$depth.'" '.($depth != 3 ? 'data-id-node-parent-user="'.$userID.'" ' : '').' '.($depth != 3 ? 'data-id-node-user="'.$userID.'" ' : '').' class="parent-wrapper line'.$depth.' clearfix">';
             }
             foreach ($allTree[$userID] as $position => $TreeDetail) {
                 $positionSelect = $position;
