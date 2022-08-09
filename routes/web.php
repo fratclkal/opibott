@@ -127,6 +127,7 @@ Route::middleware([isLogin::class])->group(function () {
         Route::get('/all_transfer_list', 'all_transfer_list')->name('all_transfer_list');
         Route::get('/transfer_reject/{id}', 'withdrawDelete')->name('transfer_reject');
         Route::get('/transfer_accept/{id}', 'withdrawAccept')->name('transfer_accept');
+        Route::post('/transfer_accept/manual', 'acceptTransfer')->name('transfer_accept_manual');
 
     });
     Route::controller(AdminComissionsController::class)->group(function () {

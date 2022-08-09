@@ -24,14 +24,14 @@ class TransfersController extends Controller
             }else{
                 return redirect(route('homePage'));
             }
-            
+
         });
-        
+
     }
     public function all_transfer_list()
     {
         $transfers = DB::select("SELECT users.name,users.email,withdraws.id,withdraws.wallet,withdraws.amount,withdraws.type,withdraws.created_at,withdraws.status FROM withdraws LEFT JOIN users ON withdraws.user_id = users.id");
- 
+
         View::share(['transfer' => $transfers]);
         return view('admin.all_transfers_list');
     }
@@ -39,11 +39,11 @@ class TransfersController extends Controller
     public function transfer_list()
     {
         $transfers = DB::select("SELECT users.name,users.email,withdraws.id,withdraws.wallet,withdraws.amount,withdraws.type,withdraws.created_at FROM withdraws LEFT JOIN users ON withdraws.user_id = users.id WHERE withdraws.status =2 GROUP BY withdraws.created_at;");
- 
+
         View::share(['transfer' => $transfers]);
         return view('admin.transfers_list');
     }
- 
+
     public function withdrawDelete($id){
         $check = Withdraws::where([
             'status'=>2,
@@ -56,9 +56,9 @@ class TransfersController extends Controller
             }
             return redirect()->route('transfer_list')->with('error','İşlem Başarısız!');
         }
-        
-        return redirect()->route('transfer_list')->with('error','İşlem Başarısız!');      
-        
+
+        return redirect()->route('transfer_list')->with('error','İşlem Başarısız!');
+
     }
 
     public function withdrawAccept($id){
@@ -66,7 +66,7 @@ class TransfersController extends Controller
             'status'=>2,
             'id'=>$id
         ])->first();
-        
+
         if ($check) {
             if (!self::checkBallance($check->user_id)) {
                 return redirect()->route('transfer_list')->with('error','Bu kullanıcının bakiyesi yok!');
@@ -78,9 +78,9 @@ class TransfersController extends Controller
             return redirect()->route('transfer_list')->with('error','İşlem Başarısız!');
         }
         return redirect()->route('transfer_list')->with('error','İşlem Başarısız!');
-        
+
     }
-   
+
     private function checkBallance($user_id)
     {
         $comission = Comission::where([
@@ -95,6 +95,18 @@ class TransfersController extends Controller
         return $ballance >= 0 ? true : false;
 
     }
-     
-    
+
+    public function acceptTransfer(Request $request){
+        $request->validate([
+            'id' => 'required|exists:withdraws,id'
+        ]);
+
+        Withdraws::where('id', $request->id)->update([
+            'status' => 1
+        ]);
+
+        return response()->json(['success' => true, 'status'=>200]);
+    }
+
+
 }
