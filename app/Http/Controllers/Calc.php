@@ -15,10 +15,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
- 
+
 class Calc extends Controller
 {
-  
+
     public static function calc_reference($payment_id)
     {
         $payment = Payment::find($payment_id);
@@ -54,7 +54,7 @@ class Calc extends Controller
                 return false;
             }
         }
-        
+
     }
     public static function send_payment_confirmation_binary($id)
     {
@@ -107,13 +107,13 @@ class Calc extends Controller
             $binarylog->save();
             if ($data->person) {
                 $flashOutCalc = DB::select("SELECT COALESCE(SUM(usd_amount),0) as  usd_amount FROM `comissions` WHERE user_id=".$data->person." AND type='BINARY' AND created_at >= now() - INTERVAL 1 DAY");
-            
+
                 if ($flashOutCalc[0]->usd_amount >= 1000 ) {
                     continue;
                 }
             }
-            
-            
+
+
             $twocheck = User::where('upline_id', (integer)$data->person)->where('payment', 1)->get();
 
             $twocheck = count($twocheck);
@@ -193,10 +193,10 @@ class Calc extends Controller
                     $comission->left_point_usd -= $prim_usd;
 
                     $comission->save();
-                    
+
                     $prim_tot += self::add_comission_binary((integer)$data->person, 'R', $point_binary_btc, $point_binary_usd, $id, $depth);
-                    
-                    
+
+
 
                 } else if ($left_point_usd <= $right_point_usd && ($left_point_usd > 0)) {
                     $point_binary_usd = (float)$prim_usd;
@@ -206,10 +206,10 @@ class Calc extends Controller
                     $comission->right_point_usd -= $prim_usd;
                     $comission->left_point_usd -= $prim_usd;
                     $comission->save();
-                    
+
                     $prim_tot += self::add_comission_binary((integer)$data->person, 'L', $point_binary_btc, $point_binary_usd, $id, $depth);
-                    
-                    
+
+
                 }
 
             }
@@ -225,7 +225,7 @@ class Calc extends Controller
 
     public static function add_comission_binary($user_id, $direction, $amount, $amount_usd, $from_id, $depth)
     {
-        $bugun = trim(strftime('%e'));
+        $bugun = trim(self::strftime('%e'));
         $yil = date('Y');
         $yilinilk = ($yil . '-01-01');
         $tarih1 = strtotime($yilinilk);
@@ -234,7 +234,7 @@ class Calc extends Controller
         $gunfarki = ($tarih2 - $tarih1) / 86400;
 
         $kacay = date('n');
-        $buay = trim(strftime($kacay));
+        $buay = trim(self::strftime($kacay));
 
         $buhafta = round($gunfarki / 7) + 0;
         $today_date = date('Y-m-d');
@@ -293,12 +293,12 @@ class Calc extends Controller
                     if ($user->career > 0) {
                         $right_user_info["career_count"] += 1;
                     }
-                    
+
                 }
             }
 
         }
-        
+
         $win_career = self::calcCareer($current_user->career, $left_user_info["career_with_ref"], $left_user_info["career_count"], $right_user_info["career_with_ref"], $right_user_info["career_count"]);
         if ($win_career > $current_user->career) {
             RankLog::create([
@@ -310,7 +310,7 @@ class Calc extends Controller
             $current_user->career = $win_career;
             $current_user->save();
         }
-        
+
     }
     public static function findTotalCareerMyTeam($user_id, $sub_user_id, $career_info = []){
         if (!isset($career_info["career_with_ref"])) {
@@ -337,7 +337,7 @@ class Calc extends Controller
                 foreach ($sub_users as $key => $sub_user) {
                    $career_info = self::findTotalCareerMyTeam($user_id, $sub_user->id,$career_info);
                 }
-                
+
             }
             */
         }
@@ -498,7 +498,7 @@ class Calc extends Controller
 
         }
         return $children;
-    } 
+    }
     public static function myTeamBinaryCalc($firstID,$depth = 1,$children = []){
         $start = Carbon::yesterday()->startOfDay();
         $end = Carbon::yesterday()->endOfDay();
@@ -554,5 +554,168 @@ class Calc extends Controller
         }else{
             return array('rate' => 0);
         }
+    }
+
+    public static function strftime(string $format, $timestamp = null, $locale = null)
+    {
+        if (null === $timestamp) {
+            $timestamp = new \DateTime;
+        }
+        elseif (is_numeric($timestamp)) {
+            $timestamp = date_create('@' . $timestamp);
+
+            if ($timestamp) {
+                $timestamp->setTimezone(new \DateTimezone(date_default_timezone_get()));
+            }
+        }
+        elseif (is_string($timestamp)) {
+            $timestamp = date_create($timestamp);
+        }
+
+        if (!($timestamp instanceof \DateTimeInterface)) {
+            throw new \InvalidArgumentException('$timestamp argument is neither a valid UNIX timestamp, a valid date-time string or a DateTime object.');
+        }
+
+        $locale = substr((string) $locale, 0, 5);
+
+        $intl_formats = [
+            '%a' => 'EEE',	// An abbreviated textual representation of the day	Sun through Sat
+            '%A' => 'EEEE',	// A full textual representation of the day	Sunday through Saturday
+            '%b' => 'MMM',	// Abbreviated month name, based on the locale	Jan through Dec
+            '%B' => 'MMMM',	// Full month name, based on the locale	January through December
+            '%h' => 'MMM',	// Abbreviated month name, based on the locale (an alias of %b)	Jan through Dec
+        ];
+
+        $intl_formatter = function (\DateTimeInterface $timestamp, string $format) use ($intl_formats, $locale) {
+            $tz = $timestamp->getTimezone();
+            $date_type = \IntlDateFormatter::FULL;
+            $time_type = \IntlDateFormatter::FULL;
+            $pattern = '';
+
+            // %c = Preferred date and time stamp based on locale
+            // Example: Tue Feb 5 00:45:10 2009 for February 5, 2009 at 12:45:10 AM
+            if ($format == '%c') {
+                $date_type = \IntlDateFormatter::LONG;
+                $time_type = \IntlDateFormatter::SHORT;
+            }
+            // %x = Preferred date representation based on locale, without the time
+            // Example: 02/05/09 for February 5, 2009
+            elseif ($format == '%x') {
+                $date_type = \IntlDateFormatter::SHORT;
+                $time_type = \IntlDateFormatter::NONE;
+            }
+            // Localized time format
+            elseif ($format == '%X') {
+                $date_type = \IntlDateFormatter::NONE;
+                $time_type = \IntlDateFormatter::MEDIUM;
+            }
+            else {
+                $pattern = $intl_formats[$format];
+            }
+
+            return (new \IntlDateFormatter($locale, $date_type, $time_type, $tz, null, $pattern))->format($timestamp);
+        };
+
+        // Same order as https://www.php.net/manual/en/function.strftime.php
+        $translation_table = [
+            // Day
+            '%a' => $intl_formatter,
+            '%A' => $intl_formatter,
+            '%d' => 'd',
+            '%e' => function ($timestamp) {
+                return sprintf('% 2u', $timestamp->format('j'));
+            },
+            '%j' => function ($timestamp) {
+                // Day number in year, 001 to 366
+                return sprintf('%03d', $timestamp->format('z')+1);
+            },
+            '%u' => 'N',
+            '%w' => 'w',
+
+            // Week
+            '%U' => function ($timestamp) {
+                // Number of weeks between date and first Sunday of year
+                $day = new \DateTime(sprintf('%d-01 Sunday', $timestamp->format('Y')));
+                return sprintf('%02u', 1 + ($timestamp->format('z') - $day->format('z')) / 7);
+            },
+            '%V' => 'W',
+            '%W' => function ($timestamp) {
+                // Number of weeks between date and first Monday of year
+                $day = new \DateTime(sprintf('%d-01 Monday', $timestamp->format('Y')));
+                return sprintf('%02u', 1 + ($timestamp->format('z') - $day->format('z')) / 7);
+            },
+
+            // Month
+            '%b' => $intl_formatter,
+            '%B' => $intl_formatter,
+            '%h' => $intl_formatter,
+            '%m' => 'm',
+
+            // Year
+            '%C' => function ($timestamp) {
+                // Century (-1): 19 for 20th century
+                return floor($timestamp->format('Y') / 100);
+            },
+            '%g' => function ($timestamp) {
+                return substr($timestamp->format('o'), -2);
+            },
+            '%G' => 'o',
+            '%y' => 'y',
+            '%Y' => 'Y',
+
+            // Time
+            '%H' => 'H',
+            '%k' => function ($timestamp) {
+                return sprintf('% 2u', $timestamp->format('G'));
+            },
+            '%I' => 'h',
+            '%l' => function ($timestamp) {
+                return sprintf('% 2u', $timestamp->format('g'));
+            },
+            '%M' => 'i',
+            '%p' => 'A', // AM PM (this is reversed on purpose!)
+            '%P' => 'a', // am pm
+            '%r' => 'h:i:s A', // %I:%M:%S %p
+            '%R' => 'H:i', // %H:%M
+            '%S' => 's',
+            '%T' => 'H:i:s', // %H:%M:%S
+            '%X' => $intl_formatter, // Preferred time representation based on locale, without the date
+
+            // Timezone
+            '%z' => 'O',
+            '%Z' => 'T',
+
+            // Time and Date Stamps
+            '%c' => $intl_formatter,
+            '%D' => 'm/d/Y',
+            '%F' => 'Y-m-d',
+            '%s' => 'U',
+            '%x' => $intl_formatter,
+        ];
+
+        $out = preg_replace_callback('/(?<!%)(%[a-zA-Z])/', function ($match) use ($translation_table, $timestamp) {
+            if ($match[1] == '%n') {
+                return "\n";
+            }
+            elseif ($match[1] == '%t') {
+                return "\t";
+            }
+
+            if (!isset($translation_table[$match[1]])) {
+                throw new \InvalidArgumentException(sprintf('Format "%s" is unknown in time format', $match[1]));
+            }
+
+            $replace = $translation_table[$match[1]];
+
+            if (is_string($replace)) {
+                return $timestamp->format($replace);
+            }
+            else {
+                return $replace($timestamp, $match[1]);
+            }
+        }, $format);
+
+        $out = str_replace('%%', '%', $out);
+        return $out;
     }
 }
