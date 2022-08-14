@@ -21,7 +21,7 @@
     <b>Kesilecek transfer ücreti:</b> <span>{{$data["fee"]}} USDT</span>
 </p>
 <p>
-    <a href="{{route('withdraw_mail_confirmation',$data["withdraw_id"],$data["token"])}}" target="_blank">Onaylamak için lütfen tıklayınız</a>
+    <a href="{{route('withdraw_mail_confirmation',[$data["withdraw_id"],$data["token"]])}}" target="_blank">Onaylamak için lütfen tıklayınız</a>
 </p>
 </body>
 </html>

@@ -17,7 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\SendMail;
 use Illuminate\Support\Facades\Hash;
- 
+
 class WalletController extends Controller
 {
 
@@ -142,7 +142,7 @@ class WalletController extends Controller
                 'title' => "Opi Bot - Transfer Onay",
                 'name' => auth()->user()->name,
                 'email' => auth()->user()->email,
-                'token' => $token,
+                'token' => $addWithdraw->token,
                 'withdraw_id' => $addWithdraw->id,
                 'wallet' => $request->address,
                 'amount' => $request->amount,
@@ -171,7 +171,7 @@ class WalletController extends Controller
     }
 
     public function withdrawDelete($id){
-        
+
         $check = Withdraws::where([
             'user_id'=>auth()->user()->id,
             'status'=>0,
@@ -179,8 +179,8 @@ class WalletController extends Controller
         ])->first();
 
         return redirect()->route('WalletIndex')->with($check && $check->delete() ? 'succesDelete' : 'error',true);
-    
-        
+
+
     }
 
     public function withdrawAccept($id){
@@ -189,7 +189,7 @@ class WalletController extends Controller
                 'status'=>2,
                 'id'=>$id
             ])->first();
-            
+
             if ($check) {
                 $check->status = 1;
                 if ($check->save()) {
